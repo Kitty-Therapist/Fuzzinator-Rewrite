@@ -1,0 +1,9 @@
+[Credentials]
+; Token here, don't leak it.
+token =
+
+[Settings]
+developers = 
+fun_cog_cooldown = 0
+mod_cog_cooldown = 0
+utils_cog_cooldown = 0
