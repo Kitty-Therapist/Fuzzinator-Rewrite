@@ -3,12 +3,12 @@
 Fuzzinator is being redone to be over **900%** better.
 More ehm async! More memes! More automod!
 
-##Cool Dev People
+## Cool Dev People
 
-####Owner
+#### Owner
  - Ghoul#0009
 
-####Developers/Collaborators
+#### Developers/Collaborators
  - Pheonix#5555
  - AEnterprise#4693
  - Tarek#1337
