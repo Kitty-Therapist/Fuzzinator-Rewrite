@@ -1,7 +1,7 @@
 # Fuzzinator-Rewrite
 
 Fuzzinator is being redone to be over **900%** better.
-More ehm async! More memes! More automod!
+**More async! More memes! More automod!**
 
 ## Cool Dev People
 
