@@ -1,4 +1,5 @@
-import asyncio 
+#!/usr/bin/env python3
+import asyncio
 import datetime
 import discord
 import configparser
