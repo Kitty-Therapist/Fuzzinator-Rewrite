@@ -102,3 +102,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# .vscode/ to remove files created by vscode when editing
+# .DS_Store is a local file for mac that doesn't need to be added to the GitHub.
+\.DS_Store
+.vscode/

@@ -1,4 +1,5 @@
-import asyncio 
+#!/usr/bin/env python3
+import asyncio
 import datetime
 import discord
 import configparser
@@ -31,11 +32,14 @@ async def on_command_error(ctx: commands.Context, error):
     elif isinstance(error, commands.BotMissingPermissions):
         BotLogs.error(f"Encountered a permissions error while executing {ctx.command}")
         await ctx.send(error)
+
     elif isinstance(error, commands.DisabledCommand):
         await ctx.send("Sorry. This command is disabled and cannot be used.")
     elif isinstance(error, commands.CheckFailure):
         if ctx.command.qualified_name is not "latest":
             await ctx.send(":lock: You do not have the required permissions to run this command")
+    elif isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(error)
     elif isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(f"You are missing a required argument!(See {ctx.prefix}help {ctx.command.qualified_name} for info on how to use this command)")
     elif isinstance(error, commands.BadArgument):

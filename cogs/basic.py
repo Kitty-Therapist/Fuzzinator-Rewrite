@@ -1,5 +1,5 @@
 import discord
-import time 
+import time
 import asyncio
 import datetime
 from discord.ext import commands
@@ -27,7 +27,7 @@ class basic:
             except discord.Forbidden:
                 await ctx.send("Are you sure I have permission to do this?")
                 return
-        else: 
+        else:
             await ctx.send("I can't just send an empty embed, bro.")
             return
 
@@ -41,7 +41,7 @@ class basic:
         else:
             await ctx.message.author.remove_roles(role)
             await ctx.send(f"Successfully left {role.name}!")
-    
+
     @commands.command()
     @commands.guild_only()
     async def mac(self, ctx):
@@ -52,7 +52,7 @@ class basic:
         else:
             await ctx.message.author.remove_roles(role)
             await ctx.send(f"Successfully left {role.name}!")
-    
+
     @commands.command()
     @commands.guild_only()
     async def ios(self, ctx):
@@ -125,29 +125,38 @@ class basic:
 
     @commands.command()
     @commands.guild_only()
-    async def spam(self,ctx):
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
-        await asyncio.sleep(5)
-        await ctx.send("You have requested spam.")
+    @command.cooldown(1, 30, BucketType.user)
+    async def spam(self,ctx,amount:int=None):
+        limit = 50
+        if amount is not None:
+            if amount > limit:
+                await ctx.send('Hey! You trying to ratelimit me?! Keep it under {limit}.'.format(limit=limit))
+            else:
+                while amount > 0:
+                    await ctx.send("You have requested spam.")
+                    await asyncio.sleep(5)
+                    amount -= 1
+        else:
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
 
-            
-            
 
 def setup(bot):
     bot.add_cog(basic(bot))
