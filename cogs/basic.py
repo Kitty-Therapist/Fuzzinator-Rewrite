@@ -128,17 +128,14 @@ class basic:
     @command.cooldown(1, 30, BucketType.user)
     async def spam(self,ctx,amount:int=None):
         limit = 50
-        halflimit = limit / 2
         if amount is not None:
             if amount > limit:
                 await ctx.send('Hey! You trying to ratelimit me?! Keep it under {limit}.'.format(limit=limit))
-        else:
-            while amount > 0:
-                if amount < halflimit:
-                    ctx.command.reset_cooldown(ctx)
-                await ctx.send("You have requested spam.")
-                await asyncio.sleep(5)
-                amount -= 1
+            else:
+                while amount > 0:
+                    await ctx.send("You have requested spam.")
+                    await asyncio.sleep(5)
+                    amount -= 1
         else:
             await ctx.send("You have requested spam.")
             await asyncio.sleep(5)
