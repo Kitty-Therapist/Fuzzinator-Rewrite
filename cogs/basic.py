@@ -1,11 +1,14 @@
 import discord
-import time
+import time 
 import asyncio
 import datetime
+import traceback
+import logging
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import utils
 from utils import Util
+from datetime import datetime
 
 class basic:
     def __init__(self, bot):
@@ -21,14 +24,14 @@ class basic:
     async def embed(self, ctx, title, *, embedding = ""):
         if(embedding != ""):
             try:
-                embed = discord.Embed(title=title, colour=discord.Colour(0xf47b67), description=f"{embedding}", timestamp=datetime.datetime.utcfromtimestamp(time.time()))
+                embed = discord.Embed(title=title, colour=discord.Colour(0xf47b67), description=f"{embedding}")
                 embed.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.id})")
                 embed.set_footer(text="Do ``!embed <content>`` for embed testing.")
                 message = await ctx.send(embed=embed)
             except discord.Forbidden:
                 await ctx.send("Are you sure I have permission to do this?")
                 return
-        else:
+        else: 
             await ctx.send("I can't just send an empty embed, bro.")
             return
 
@@ -42,7 +45,7 @@ class basic:
         else:
             await ctx.message.author.remove_roles(role)
             await ctx.send(f"Successfully left {role.name}!")
-
+    
     @commands.command()
     @commands.guild_only()
     async def mac(self, ctx):
@@ -53,7 +56,7 @@ class basic:
         else:
             await ctx.message.author.remove_roles(role)
             await ctx.send(f"Successfully left {role.name}!")
-
+    
     @commands.command()
     @commands.guild_only()
     async def ios(self, ctx):
@@ -126,12 +129,12 @@ class basic:
 
     @commands.command()
     @commands.guild_only()
-    @command.cooldown(1, 30, BucketType.user)
+    @commands.cooldown(1, 30, BucketType.user)
     async def spam(self,ctx,amount:int=None):
         limit = 50
         if amount is not None:
             if amount > limit:
-                await ctx.send('Hey! You trying to ratelimit me?! Keep it under {limit}.'.format(limit=limit))
+                await ctx.send(f"Hey! You trying to ratelimit me?! Please keep it under {limit}")
             else:
                 while amount > 0:
                     await ctx.send("You have requested spam.")
@@ -157,7 +160,60 @@ class basic:
             await ctx.send("You have requested spam.")
             await asyncio.sleep(5)
             await ctx.send("You have requested spam.")
+            await asyncio.sleep(5)
+            await ctx.send("You have requested spam.")
 
+    @commands.command()
+    @commands.guild_only()
+    async def pong(self, ctx: commands.Context, durationNumber: int, durationIdentifier: str, *, comment = " "):
+        if(comment != ""):
+                try:    
+                    duration = Util.convertToSeconds(durationNumber, durationIdentifier)
+                    until = time.time() + duration
+                    await asyncio.sleep(duration)
+                    await ctx.send(f"<@{ctx.author.id}> {comment}")
+                except discord.Forbidden:
+                        await ctx.send("Are you sure I have permission to do this?")
+                        return
+        else: 
+            await ctx.send(f"<@{ctx.author.id}>")
+            return
+
+    @commands.command()
+    async def about(self, ctx: commands.Context):
+        """Shows information about the bot"""
+        embed = discord.Embed(color=0x98f5ff)
+        embed.add_field(name='Name', value=f"{ctx.bot.user.name}", inline=True)
+        embed.add_field(name='Uptime', value=Util.chop_microseconds(datetime.now()-ctx.bot.starttime),inline=True)
+        embed.add_field(name='Description', value="A little, maybe not that little bot build to fullfil the needs of the Bug Hunters of the Bug-Bombing Area 600.\nThe bot is currently Work in progress!", inline=True)
+        await ctx.send(embed=embed)
+
+    @commands.group()
+    async def invite(self, ctx):
+        """searches for a valid invite and sends that."""
+        if ctx.invoked_subcommand is None:
+            invites = await ctx.guild.invites()
+            if len(invites) > 0:
+                inviteurl = None
+                for invite in invites:
+                    if invite.max_uses == 0 and invite.max_age == 0:
+                        inviteurl = invite.url
+                        break;
+
+                if inviteurl is not None:
+                    await ctx.send(inviteurl)
+                else:
+                    await ctx.send("there currently are no invites on this server.")
+            else:
+                await ctx.send("there currently are no invites on this server.")
+
+    @invite.command(name='new')
+    async def newInvite(self, ctx, uses :int = 1):
+        """Generates a new invites based on your wished uses. By default the invite has one use."""
+        invite = await ctx.guild.text_channels[0].create_invite(max_uses=(uses))
+        invite_url = str(invite)
+        await ctx.send(f"I've created an invite based of your input! Here is an invite with ``{uses}`` use(s).")
+            
 
 def setup(bot):
     bot.add_cog(basic(bot))
