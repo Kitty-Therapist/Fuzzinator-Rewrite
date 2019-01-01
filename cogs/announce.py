@@ -20,16 +20,16 @@ class announce:
         BugHunters = discord.utils.get(ctx.guild.roles, id=391357713428512780)
         channel = ctx.guild.get_channel(392400500676362240)
 
-        if BugHunters is None:
-            return await ctx.send("I think <@298618155281154058> accidentally deleted this role.")
-
         if 391357618683379724 not in [role.id for role in ctx.author.roles]:
             return await ctx.send("Sorry, I'm afraid that you don't have the permission to ping people.")
+
+        if BugHunters is None:
+            return await ctx.send("I think <@298618155281154058> accidentally deleted this role.")
         
         if BH != None:
             try:
                 await BugHunters.edit(mentionable=True)
-                await channel.send(f"{role.mention}\n{BH}")
+                await channel.send(f"{BugHunters.mention}\n{BH}")
                 await BugHunters.edit(mentionable=False)      
             except discord.Forbidden:
                 await ctx.send("I wasn't able to send a message in the announcement channel. Please check that I am able to talk.")
