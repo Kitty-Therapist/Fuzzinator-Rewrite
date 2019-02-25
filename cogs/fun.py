@@ -5,9 +5,9 @@ import datetime
 from discord.ext import commands
 from discord.ext.commands import BadArgument
 from discord import utils
-from utils import Util
+from utils import Util, Configuration
 
-class fun:
+class fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -39,6 +39,28 @@ class fun:
                 await ctx.send("Why do you need me to summon myself? :confused:") 
             else:
                 await ctx.send(f"{member.name} is already a member of this server, do the ping youself, lazy humans.")
+    
+    @commands.command(name='hug', aliases=['huh','hugh'])
+    @commands.guild_only()
+    async def hug(self, ctx: commands.Context, friend: discord.Member):
+        """Hugs a person."""
+        if friend == ctx.author:
+            await ctx.send("You must be really lonely if you need to hug yourself, have one from me instead!")
+        elif friend == self.bot.user:
+            await ctx.send("Thanks for the hug!")
+        else:
+            await ctx.send(f"{friend.mention}, you have recieved a big, big hug from {ctx.author.name}!")
+
+    @commands.command(name='fight', aliases=['fite'])
+    @commands.guild_only()
+    async def fight(self, ctx: commands.Context, friend: discord.Member):
+        """Hugs a person."""
+        if friend == ctx.author:
+            await ctx.send("Why are you trying to fight yourself?")
+        elif friend == self.bot.user:
+            await ctx.send("Whoa, whoa. Why are you fighting me? :(")
+        else:
+            await ctx.send(f"{ctx.author.mention} has fought {friend.mention}!")
 
 def setup(bot):
     bot.add_cog(fun(bot))
