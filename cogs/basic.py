@@ -7,10 +7,10 @@ import logging
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import utils
-from utils import Util
+from utils import Util, Configuration
 from datetime import datetime
 
-class basic:
+class basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -36,70 +36,30 @@ class basic:
             return
 
     @commands.command()
-    @commands.guild_only()
-    async def windows(self, ctx):
-        role = discord.utils.get(ctx.guild.roles, id=467929171016810507)
+    async def role(self, ctx: commands.Context, role_name):
+        role = Configuration.role_assignment(ctx, role_name)
+        log = ctx.guild.get_channel(414716924057092106)
         if role not in ctx.author.roles:
             await ctx.message.author.add_roles(role)
-            await ctx.send(f"Successfully joined {role.name}!")
+            reply = await ctx.send(f"Successfully joined {role.name}!")
+            await log.send(f":bug: **{ctx.author.name}#{ctx.author.discriminator}** (``{ctx.author.id}``) has joined the **{role.name}** role!")
+            await asyncio.sleep(10)
+            await reply.delete()
+            await ctx.message.delete()
         else:
             await ctx.message.author.remove_roles(role)
-            await ctx.send(f"Successfully left {role.name}!")
-    
-    @commands.command()
-    @commands.guild_only()
-    async def mac(self, ctx):
-        role = discord.utils.get(ctx.guild.roles, id=467930453605613578)
-        if role not in ctx.author.roles:
-            await ctx.message.author.add_roles(role)
-            await ctx.send(f"Successfully joined {role.name}!")
-        else:
-            await ctx.message.author.remove_roles(role)
-            await ctx.send(f"Successfully left {role.name}!")
-    
-    @commands.command()
-    @commands.guild_only()
-    async def ios(self, ctx):
-        role = discord.utils.get(ctx.guild.roles, id=467939871672107018)
-        if role not in ctx.author.roles:
-            await ctx.message.author.add_roles(role)
-            await ctx.send(f"Successfully joined {role.name}!")
-        else:
-            await ctx.message.author.remove_roles(role)
-            await ctx.send(f"Successfully left {role.name}!")
+            reply = await ctx.send(f"Successfully left {role.name}!")
+            await log.send(f":bug: **{ctx.author.name}#{ctx.author.discriminator}** (``{ctx.author.id}``) has left the **{role.name}** role!")
+            await asyncio.sleep(10)
+            await reply.delete()
+            await ctx.message.delete()
+            
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        if member.guild.id == 391356859518287895:
+            log = self.bot.get_channel(432333845086339072)
+            await log.send(f"{member.mention}, Welcome to Bug Bombing Area 600! This is meant to be a testing server for the Bug Hunters:tm:, please take a few minutes to review <#467917164066897941> then grab your roles in <#467917403918172180>. If you need help finding your roles, see the pins in that channel. Once you have gotten the roles and read the rules, please let a mod know so they can apply the Bug Hunters:tm: role on you! :heart:")
 
-    @commands.command()
-    @commands.guild_only()
-    async def android(self, ctx):
-        role = discord.utils.get(ctx.guild.roles, id=467940055181164554)
-        if role not in ctx.author.roles:
-            await ctx.message.author.add_roles(role)
-            await ctx.send(f"Successfully joined {role.name}!")
-        else:
-            await ctx.message.author.remove_roles(role)
-            await ctx.send(f"Successfully left {role.name}!")
-
-    @commands.command()
-    @commands.guild_only()
-    async def linux(self, ctx):
-        role = discord.utils.get(ctx.guild.roles, id=467940096407109632)
-        if role not in ctx.author.roles:
-            await ctx.message.author.add_roles(role)
-            await ctx.send(f"Successfully joined {role.name}!")
-        else:
-            await ctx.message.author.remove_roles(role)
-            await ctx.send(f"Successfully left {role.name}!")
-
-    @commands.command()
-    @commands.guild_only()
-    async def botupdate(self, ctx):
-        role = discord.utils.get(ctx.guild.roles, id=472189143645028363)
-        if role not in ctx.author.roles:
-            await ctx.message.author.add_roles(role)
-            await ctx.send(f"Successfully joined {role.name}!")
-        else:
-            await ctx.message.author.remove_roles(role)
-            await ctx.send(f"Successfully left {role.name}!")
 
     @commands.command()
     @commands.guild_only()
