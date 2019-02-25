@@ -7,9 +7,10 @@ from subprocess import Popen
 import subprocess
 
 from discord.ext import commands
-from discord import utils
+from discord import utils 
+from utils import Util, Configuration
 
-class Reload:
+class Reload(commands.Cog):
     def __init__(self, bot):
         self.bot:commands.Bot = bot
 
