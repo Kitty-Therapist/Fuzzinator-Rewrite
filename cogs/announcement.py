@@ -30,9 +30,13 @@ class announcement(commands.Cog):
     @commands.bot_has_permissions(manage_roles=True)       
     @commands.command()
     async def announce(self, ctx: commands.Context, role_name, *, message):
+        Mods = discord.utils.get(ctx.guild.roles, id=391357618683379724)
         role = Configuration.get_role(ctx, role_name)
         channel = Configuration.get_channel(ctx, role_name)
         log = ctx.guild.get_channel(414716924057092106)
+
+        if 391357618683379724 not in [role.id for role in ctx.author.roles]:
+            return await ctx.send("Sorry, I'm afraid that you don't have the permission to use this secret command.")
 
         if role is None:
             return await ctx.send("This role might have been deleted, oops!")
@@ -52,6 +56,10 @@ class announcement(commands.Cog):
     async def update(self, ctx: commands.Context, role_name, message_id:int, *, new_message):
         channel = Configuration.get_channel(ctx, role_name)
         log = ctx.guild.get_channel(414716924057092106)
+        Mods = discord.utils.get(ctx.guild.roles, id=391357618683379724)
+
+        if 391357618683379724 not in [role.id for role in ctx.author.roles]:
+            return await ctx.send("Sorry, I'm afraid that you don't have the permission to use this secret command.")
         try:
             message = await channel.get_message(message_id)
         except (discord.Forbidden) as e:
@@ -77,6 +85,11 @@ class announcement(commands.Cog):
     async def mention(self, ctx: commands.Context, role_name):
         role = Configuration.get_role(ctx, role_name)
         log = ctx.guild.get_channel(414716924057092106)
+        Mods = discord.utils.get(ctx.guild.roles, id=391357618683379724)
+
+        if 391357618683379724 not in [role.id for role in ctx.author.roles]:
+            return await ctx.send("Sorry, I'm afraid that you don't have the permission to use this secret command.")
+            
         if role.mentionable:
             await role.edit(mentionable=False)
             await ctx.send(f"{role.name} is now unmentionable!")
