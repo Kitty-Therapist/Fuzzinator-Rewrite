@@ -3,26 +3,27 @@ import asyncio
 import datetime
 import discord
 import configparser
+import os
+from argparse import ArgumentParser
 import time
 import math
 import traceback
 import logging
 from discord.ext import commands
-from discord import utils
+from discord.ext.commands import BucketType
 from discord import abc
-from utils import Util, BotLogs
+from utils import Util, BotLogs, Configuration
 
 from discord.abc import PrivateChannel
 
-TOKEN = "Bugs are cool"
 
-bot = commands.Bot(command_prefix="+",
+bot = commands.Bot(command_prefix="!",
                    description='A bot meant for the Bug Hunters!')
 
 bot.starttime = datetime.datetime.now()
 bot.startup_done = False
 
-initial_extensions = ['basic', 'Reload', 'announce', 'fun']
+initial_extensions = ['basic', 'Reload', 'announcement', 'fun']
 
 @bot.event
 async def on_command_error(ctx: commands.Context, error):
@@ -32,7 +33,6 @@ async def on_command_error(ctx: commands.Context, error):
     elif isinstance(error, commands.BotMissingPermissions):
         BotLogs.error(f"Encountered a permissions error while executing {ctx.command}")
         await ctx.send(error)
-
     elif isinstance(error, commands.DisabledCommand):
         await ctx.send("Sorry. This command is disabled and cannot be used.")
     elif isinstance(error, commands.CheckFailure):
@@ -119,4 +119,17 @@ async def on_ready():
     print("I'm ready for assistance!")
     await bot.change_presence(activity=discord.Activity(name='the Bug Hunters!', type=discord.ActivityType.watching))
 
-bot.run(TOKEN)
+if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument("--token", help="Specify your Discord token")
+
+    clargs = parser.parse_args()
+    if 'botlogin' in os.environ:
+        token = os.environ['botlogin']
+    elif clargs.token:
+        token = clargs.token
+    elif not Configuration.get_master_var("LOGIN_TOKEN", "0") is "0":
+        token = Configuration.get_master_var("LOGIN_TOKEN")
+    else:
+        token = input("Please enter your Discord token: ")
+    bot.run(token)
